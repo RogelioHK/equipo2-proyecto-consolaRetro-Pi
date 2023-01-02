@@ -4,4 +4,4 @@
 Paquetes necesarios
 
 sudo apt-get update
-sudo apt-get install git
+<code>sudo apt-get install git</code>
