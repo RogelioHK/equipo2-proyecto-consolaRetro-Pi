@@ -3,5 +3,6 @@
 
 Paquetes necesarios
 
-sudo apt-get update
+<code>sudo apt-get update</code>
+
 <code>sudo apt-get install git</code>
