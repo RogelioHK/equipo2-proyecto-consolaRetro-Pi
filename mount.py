@@ -2,12 +2,12 @@ import os
 import time
 
 #print("Mounts", os.system("blkid"))
-EXTERNAL_STORAGE = "~/ES/"
+EXTERNAL_STORAGE = "~/external-storage/"
 
 
 def isAvailableDrive():
 	#Read the storages connected to the RB
-	storages = os.popen("blkid").readlines()
+	storages = os.popen("sudo blkid").readlines()
 	#If the available storages more than 2, exist an external drive to read
 	if(len(storages) > 2):
 		drive = storages[2].split(":")[0]
@@ -26,9 +26,9 @@ def getFiles():
 		os.system("sudo mount " + drive + " " + EXTERNAL_STORAGE)
 		data = os.popen("ls " + EXTERNAL_STORAGE).readlines()
 		print(data)
-		os.system("sudo cp ~/ES/*.SMC ~/ROMS/" )
+		os.system("sudo cp "+ EXTERNAL_STORAGE + "*.SMC ~/ROMS/")
 		print("Files copied")
 #		#os.system("")
-#		os.system("sudo umount " + EXTERNAL_STORAGE)
-#		print("umounted storage")
+		os.system("sudo umount " + EXTERNAL_STORAGE)
+		print("umounted storage")
 getFiles()
