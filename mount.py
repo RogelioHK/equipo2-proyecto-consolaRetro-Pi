@@ -18,17 +18,37 @@ def isAvailableDrive():
 		return None
 
 #Function to mount the external drive, copy the Rom files and umount the external drive
-def getFiles():
+def getFiles(drive):
 	#Indicate if a external drive exist
-	drive = isAvailableDrive()
-	if(drive):
+#	drive = isAvailableDrive()
+	#if(drive):
 		print("Storage mounted: " + drive + " " + EXTERNAL_STORAGE)
 		os.system("sudo mount " + drive + " " + EXTERNAL_STORAGE)
-		data = os.popen("ls " + EXTERNAL_STORAGE).readlines()
+		data = os.popen("ls " + EXTERNAL_STORAGE + "ROMS/").readlines()
 		print(data)
+<<<<<<< Updated upstream
 		os.system("sudo cp "+ EXTERNAL_STORAGE + "*.SMC ~/ROMS/")
 		print("Files copied")
 #		#os.system("")
 		os.system("sudo umount " + EXTERNAL_STORAGE)
 		print("umounted storage")
 getFiles()
+=======
+		os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.SMC ~/ROMS/")
+		os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.smc ~/ROMS/")
+		os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.SFC ~/ROMS/")
+		os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.sfc ~/ROMS/")
+		print("Files copied")
+		os.system("sudo umount " + EXTERNAL_STORAGE)
+		print("umounted storage. Remove the storage")
+
+		while(isAvailableDrive()):
+			time.sleep(10)
+
+def detectDevice():
+	while True:
+		drive = isAvailableDrive()
+		if(drive):
+			getFiles(drive)
+		time.sleep(2)
+>>>>>>> Stashed changes
