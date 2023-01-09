@@ -21,7 +21,8 @@ Una vez compilado el emulador, puede ejecutarse con el siguiente comando para pr
 
 Después, debe copiar los archivos snesfilter, snesmusic, snesreader y supergameboy de sus respectivas carpetas; las cuales se encuentran en el directorio <code>~/bsnes-plus</code>. Para copiarlos, siga las siguentes líneas:
 <pre><code>cp ~/bsnes-plus/snesfilter/libsnesfilter.so ~/bsnes-plus/bsnes/out/</code></pre>
-<pre><code></code></pre>
-<pre><code></code></pre>
+<pre><code>cp ~/bsnes-plus/snesmusic/libsnesmusic.so ~/bsnes-plus/bsnes/out/</code></pre>
+<pre><code>cp ~/bsnes-plus/snesreader/libsnesreader.so ~/bsnes-plus/bsnes/out/</code></pre>
+<pre><code>cp ~/bsnes-plus/supergameboy/libsupergameboy.so ~/bsnes-plus/bsnes/out/</code></pre>
 
 <pre><code></code></pre>
