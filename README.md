@@ -19,4 +19,9 @@ Luego compile con el siguiente comando:
 Una vez compilado el emulador, puede ejecutarse con el siguiente comando para probarlo:
 <pre><code>xinit ~/bsnes-plus/bsnes/out/bsnes</code></pre>
 
-<pre><code>xinit</code></pre>
+Después, debe copiar los archivos snesfilter, snesmusic, snesreader y supergameboy de sus respectivas carpetas; las cuales se encuentran en el directorio <code>~/bsnes-plus</code>. Para copiarlos, siga las siguentes líneas:
+<pre><code>cp ~/bsnes-plus/snesfilter/libsnesfilter.so ~/bsnes-plus/bsnes/out/</code></pre>
+<pre><code></code></pre>
+<pre><code></code></pre>
+
+<pre><code></code></pre>
