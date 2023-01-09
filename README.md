@@ -12,5 +12,7 @@ Clonar el siguiente repositorio, el cual tiene el emulador de snes:
 
 Entrar a la carpeta y aplicar make
 
-cd ~/bsnes-plus/bsnes
-make
+<pre><code>cd ~/bsnes-plus/bsnes</code><pre>
+
+Luego compile con el siguiente comando:
+<pre><code>make</code></pre>
