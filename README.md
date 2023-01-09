@@ -25,4 +25,9 @@ Después, debe copiar los archivos snesfilter, snesmusic, snesreader y supergame
 <pre><code>cp ~/bsnes-plus/snesreader/libsnesreader.so ~/bsnes-plus/bsnes/out/</code></pre>
 <pre><code>cp ~/bsnes-plus/supergameboy/libsupergameboy.so ~/bsnes-plus/bsnes/out/</code></pre>
 
+Ahora, debe configurar el emulador. Para ello, debe iniciarlo:
+<pre><code>xinit ~/bsnes-plus/bsnes/out/bsnes</code></pre>
+
+Dentro del emulador, se debe dirigir a la pestaña "settings" y después "configuration". Elija la pestaña "input" y configure sus controles dependiendo del gamepad o joystick con el que cuente. Después, en "advanced" cambie el "video driver" por "OpenGL" y active la opción "Use native OS file dialogs".
+Después de esto, cierre el emulador y clone este repositorio en "~/"
 <pre><code></code></pre>
