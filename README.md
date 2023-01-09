@@ -15,3 +15,8 @@ Entrar a la carpeta y aplicar make
 
 Luego compile con el siguiente comando:
 <pre><code>make</code></pre>
+
+Una vez compilado el emulador, puede ejecutarse con el siguiente comando para probarlo:
+<pre><code>xinit ~/bsnes-plus/bsnes/out/bsnes</code></pre>
+
+<pre><code>xinit</code></pre>
