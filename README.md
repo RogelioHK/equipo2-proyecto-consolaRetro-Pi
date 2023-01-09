@@ -1,9 +1,16 @@
 # equipo2-proyecto-consolaRetro-Pi
  Repositorio con los archivos necesarios para crear una consola retro con la Raspberry Pi
 
+Actualizar repositorio y actualizar el software instalado:
+
+<pre><code>sudo apt-get update</code></pre>
+<pre><code>sudo apt-get upgrade</code></pre>
+
 Paquetes necesarios
 
-<pre><code>sudo apt-get install xinit matchbox-window-manager joystick git python3-tk qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtbase5-dev-tools libxv-dev libsdl1.2-dev libao-dev libopenal-dev alsa-oss alsa-tools pulseaudio g++</code></pre>
+<pre><code>sudo apt-get install pip xinit matchbox-window-manager joystick git python3-tk qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtbase5-dev-tools libxv-dev libsdl1.2-dev libao-dev libopenal-dev alsa-oss alsa-tools python3-pil.imagetk pulseaudio g++</code></pre>
+<pre><code>pip install pygame</code></pre>
+<pre><code>pip install pyPS4Controller</code></pre>
 
 Clonar el siguiente repositorio, el cual tiene el emulador de snes:
 
@@ -35,5 +42,23 @@ Después de esto, cierre el emulador y regrese a la carpeta de usuario con:
 Después, use la siguiente línea para clonar el repositorio:
 <pre><code>git clone https://github.com/RogelioHK/equipo2-proyecto-consolaRetro-Pi.git</code></pre>
 
-Una vez clonado el repositorio, primero entre a la carpetacopie el directorio "external-storage" en la carpeta "~/"
+Una vez clonado el repositorio, primero entre a la carpeta y copie el directorio "external-storage" en la carpeta "~/"
+<pre><code>cd equipo2-proyecto-consolaRetro-Pi</code></pre>
+
+Posterior a esto,  copie los directorios "filesystem" y "ROMS" a la carpeta "~/".
+<pre><code>cp -r filesystem ~/</code></pre>
+<pre><code>cp -r ROMS ~/</code></pre>
+
+Además de esto, en la carpeta del usuario, debe crear un directorio "external-storage", ya que será el directorio por defecto en el cual se montarán las USB.
+<pre><code>mkdir ~/external-storage</code></pre>
+
+Ahora, para que la interfaz se cargue de incio en la Raspberry Pi abra el archivo .bashrc
+<pre><code>nano .bashrc</code></pre>
+
+y añada las siguientes líneas al final de este:
+
+<pre><code>if [ -z "${SSH_TTY}" ]; then
+	xinit ~/filesystem/startemu.sh >/dev/null 2>&1
+fi</code></pre>
+
 <pre><code></code></pre>
