@@ -29,5 +29,11 @@ Ahora, debe configurar el emulador. Para ello, debe iniciarlo:
 <pre><code>xinit ~/bsnes-plus/bsnes/out/bsnes</code></pre>
 
 Dentro del emulador, se debe dirigir a la pestaña "settings" y después "configuration". Elija la pestaña "input" y configure sus controles dependiendo del gamepad o joystick con el que cuente. Después, en "advanced" cambie el "video driver" por "OpenGL" y active la opción "Use native OS file dialogs".
-Después de esto, cierre el emulador y clone este repositorio en "~/"
+Después de esto, cierre el emulador y regrese a la carpeta de usuario con:
+<pre><code>cd ~/</code></pre>
+
+Después, use la siguiente línea para clonar el repositorio:
+<pre><code>git clone https://github.com/RogelioHK/equipo2-proyecto-consolaRetro-Pi.git</code></pre>
+
+Una vez clonado el repositorio, primero entre a la carpetacopie el directorio "external-storage" en la carpeta "~/"
 <pre><code></code></pre>
