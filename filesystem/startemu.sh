@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Disable screen saver
-xset s off
+#xset s off
 
 #Run emu
 #python ~/filesystem/emu.py
