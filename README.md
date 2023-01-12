@@ -61,4 +61,11 @@ y añada las siguientes líneas al final de este:
 	xinit ~/filesystem/startemu.sh >/dev/null 2>&1
 fi</code></pre>
 
+Una vez teniendo los directorios en su lugar, es necesario volver a abrir el emulador y entrar a la configuración n el apartado "Paths". Aquí se añadirán las carpetas necesarias para el funcionamiento del sistema.
+
+En el apartado de "Games", elija la carpeta "home/equipo2/ROMS".
+En el apartado "save RAM", elija "home/equipo2/filesystem/RAM-states"
+El apartado "Save states, BPS/UPS/IPS patches, Cheat codes y Exported data" es opcional elegir.
+En el apartado "Extra chip firmware", elija "home/equipo2/ROMS/firmaware".
+Finalmente, salga del emulador.
 <pre><code></code></pre>
