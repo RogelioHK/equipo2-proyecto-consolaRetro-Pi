@@ -11,7 +11,11 @@ import mount
 window = tk.Tk()	#Comment when using SSH
 window['background']='#262626'
 
+<<<<<<< HEAD
 #labels and Image control. The parameter change the color, font, backgrouds color and position of the text
+=======
+#labels and Image control. The parameter change the color, font, backgroud color adn position of the text
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 lbl0 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
 lbl0.place(x=10, y=10, width=1250, height = 50)
 
@@ -63,6 +67,7 @@ lbl_img1 = Label(window, image = img2, bg = "#262626")
 
 #Global variables
 ROMS_DIR = "/home/equipo2/ROMS/"
+<<<<<<< HEAD
 roms = [] #List of the roms in the system
 actual = 0 #Variable which contains the actual position in the roms list
 open_close = 0 #Variable which count the times that the ps button is pressed
@@ -74,12 +79,22 @@ isPlaying = False #Bool which change when the emu is on or off
 isControl = False #Boo which change when the controll is connect of disconnect
 
 #Class necesary for the map of the ps4 joystick (this recognize all gamepads, but use the ps4 joystick mapped)
+=======
+roms = []
+actual = 0
+open_close = 0
+countStart = 0
+countEnd = 0
+
+#Class necesary for the ps4 control.
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 class Control(Controller):
 	def __init__(self, **kwargs):
 		Controller.__init__(self, **kwargs)
 
 	#Functions which defines the buttons action
 	def on_playstation_button_press(self):
+<<<<<<< HEAD
 		global timeStart, timeEnd, open_close, psRelease
 		open_close += 1
 		timeStart = 0
@@ -101,7 +116,37 @@ class Control(Controller):
 			sound0 = threading.Thread(target = sound, args = ["emu"])
 			sound0.start()
 		#Also, get the roms directory and execute a Thread of the emulation
+=======
+		global countStart
+		global open_close
+
+		countStart = time.time()
+		open_close += 1
+
+	def on_playstation_button_release(self):
+		global roms
+		global actual
+		global open_close
+		global actualGame
+		global countStart
+		global countEnd
+
+		countEnd = time.time()
+		totalTime = countEnd - countStart
+
+		#if (totalTime > 3):
+		sound("start")
+			#closeSystem()
+		#else:
+		if open_close == 2:
+			os.system("sudo pkill bsnes")
+			open_close = 0
+		else:
+			sound0 = threading.Thread(target = sound, args = ["emu"])
+			sound0.start()
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 			defRom = "~/bsnes-plus/bsnes/out/bsnes ~/ROMS/" + "\"" + roms[actual] + "\""
+			#defRom = "~/bsnes-plus/bsnes/out/bsnes"
 			actualGame = threading.Thread(target=os.system, args=[defRom])
 			actualGame.start()
 			isPlaying = True
@@ -112,6 +157,7 @@ class Control(Controller):
 			lbl_img1 = Label(window, image = img2, bg = "#262626")
 			lbl_img1.place(x = 0, y = -200, width = 1280, height = 1024)
 
+<<<<<<< HEAD
 #When the game is running, is unable. Else, interact with the games list.
 	def on_up_arrow_press(self):
 		global isPlaying
@@ -186,6 +232,39 @@ def isUntilPressed():
 			return
 
 #Function to load the sound pack of the system
+=======
+	def on_up_arrow_press(self):
+		sound0 = threading.Thread(target = sound, args = ["select"])
+		sound0.start()
+		updateActualRom(1)
+
+	def on_down_arrow_press(self):
+		sound0 = threading.Thread(target = sound, args = ["select"])
+		sound0.start()
+		updateActualRom(-1)
+
+#	def on_L3_y_up(self, value):
+#		sound0 = threading.Thread(target = sound, args = ["select"])
+#		sound0.start()
+#		updateActualRom(1)
+#		time.sleep(0.5)
+
+#	def on_L3_down(self, value):
+#		sound0 = threading.Thread(target = sound, args = ["select"])
+#		sound0.start()
+#		updateActualRom(-1)
+#		time.sleep(0.5)
+
+#Functions to create a sequences to input into the Joystick
+def konami_callback():
+	print("a")
+
+def seq():
+	return [{"inputs" : ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right' 'x', 'circle'],
+		"callback" : konami_callback}]
+
+#Function to play the sound pack of the system
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 def sound(snd):
 	pygame.mixer.init()
 	if(snd == "start"):
@@ -203,9 +282,20 @@ def sound(snd):
     		continue
 
 #Function to change the Image for the image of the actual game (or use the default image if isn't)
+<<<<<<< HEAD
 #and update the list of games at the left side of the GUI when is necessary
 def updateLabels():
 	global roms, actual, img, img0, lbl0, lbl_img
+=======
+#and change the list of games at the left side of the GUI
+def updateLabels():
+	global roms
+	global actual
+	global img
+	global img0
+	global lbl0
+	global lbl_img
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 
 	lbl0.delete(0, 'end')
 	lbl0.insert(0, roms[actual].split(".")[0])
@@ -245,7 +335,11 @@ def updateLabels():
 		lbl_img = Label(window, image = img0, bg = "#333333")
 		lbl_img.place(x = 455, y = 90, width = 800, height = 500)
 
+<<<<<<< HEAD
 #Function which update the next arg on the global roms list.
+=======
+#Function wich update the next arg on the global roms list.
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 # If the arg on the list is > lenght list, return to 0.
 # If the arg on the list is < 0, then return to the last arg of the list
 def updateActualRom(num):
@@ -275,7 +369,11 @@ def readRoms():
 	data = 0
 	while True:
 		data =  mount.isAvailableDrive()
+<<<<<<< HEAD
 		if data:
+=======
+		if data :
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 			sound("storage")
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "Storage Detected. Reading...")
@@ -290,16 +388,28 @@ def readRoms():
 
 #Function to update the roms global list
 def updateRoms(newRoms):
+<<<<<<< HEAD
 	global roms, lbl1
 	if (len(newRoms) > 0): #Detect if the list of new roms is empty. Else, update the roms global list
 		if ("NoROM" in newRoms): #Detect if the ROMS directory exist in the external-storage
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "No ROMS directory")
+=======
+	global roms
+
+	if (len(newRoms) > 0):
+		if ("NoROM" in newRoms):
+			lbl1.delete(0, 'end')
+			lbl1.insert(0, "No ROM directory")
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 		else:
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "New ROMS Detected! Copying...")
 
+<<<<<<< HEAD
 			#Add the new roms name to the roms global list
+=======
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 			for nr in newRoms:
 				if nr not in roms:
 					roms.append(nr)
@@ -316,10 +426,28 @@ def startGui():
 	#global actual
 
 	window.geometry("1280x1024")
+<<<<<<< HEAD
 	#bt1 = tk.Button(window, text = "Close", command = closeSystem).place(x = 640, y = 650)
 	window.mainloop()
 
 #Main function which starts the threads of services necesaries
+=======
+	bt1 = tk.Button(window, text = "Close", command = closeSystem).place(x = 640, y = 650)
+	window.mainloop()
+
+#Function to start the joystick driver
+def startControl():
+	c0 = Control(interface = "/dev/input/js0", connecting_using_ds4drv=False)
+	c0.listen(timeout=60)
+
+#Function to stop the thread of the program
+def closeSystem():
+	global window
+	#os.system("sudo shutdown -h now")
+	os.system("sudo pkill python")
+
+#Main function wich starts the threads of services necesaries
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 #for the correct functionality of the program
 def main():
 	global roms

@@ -19,10 +19,15 @@ def isAvailableDrive():
 def getFiles(drive, actualRoms):
 	newRoms = []
 	os.system("sudo mount " + drive + " " + EXTERNAL_STORAGE)
+<<<<<<< HEAD
 	storage = os.popen("ls " + EXTERNAL_STORAGE).readlines()
 	#Search for a "ROMS" directory. If doesn't exist, the script ends. If exist, copy the ROMs files
 	if "ROMS\n" in storage:
 		data = os.popen("ls " + EXTERNAL_STORAGE + "ROMS/").readlines()
+=======
+	data = os.popen("ls " + EXTERNAL_STORAGE + "ROMS/").readlines()
+	if "ROMS" in data:
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 		for rom in data:
 			rom = rom.split("\n")[0]
 			if ".SMC" in rom and rom not in actualRoms:
@@ -39,6 +44,7 @@ def getFiles(drive, actualRoms):
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.SFC ~/ROMS/")
 			elif ".png" in rom:
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.png ~/ROMS/")
+<<<<<<< HEAD
 		while(isAvailableDrive()):
 			os.system("sudo umount " + EXTERNAL_STORAGE)
 			os.system("sudo eject " + drive)
@@ -49,3 +55,14 @@ def getFiles(drive, actualRoms):
 
 #if isAvailableDrive():
 #	getFiles("/dev/sda1", [])
+=======
+		time.sleep(1)
+		os.system("sudo umount " + EXTERNAL_STORAGE)
+		os.system("sudo eject " + drive)
+		while(isAvailableDrive()):
+			os.system("sudo eject " + drive)
+			time.sleep(10)
+	else:
+		newRoms.append("NoROM")
+	return newRoms
+>>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
