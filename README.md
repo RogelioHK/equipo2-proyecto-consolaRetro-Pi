@@ -8,7 +8,7 @@ Actualizar repositorio y actualizar el software instalado:
 
 Paquetes necesarios
 
-<pre><code>sudo apt-get install pip xinit matchbox-window-manager joystick git python3-tk qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtbase5-dev-tools libxv-dev libsdl1.2-dev libao-dev libopenal-dev alsa-oss alsa-tools python3-pil.imagetk pulseaudio g++</code></pre>
+<pre><code>sudo apt-get install pip xinit matchbox-window-manager joystick git python3-tk qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtbase5-dev-tools libxv-dev libsdl1.2-dev libao-dev libopenal-dev alsa-oss alsa-tools python3-pil.imagetk pulseaudio g++ bc bison flex libssl-dev make libncurses-dev</code></pre>
 <pre><code>pip install pygame</code></pre>
 <pre><code>pip install pyPS4Controller</code></pre>
 
