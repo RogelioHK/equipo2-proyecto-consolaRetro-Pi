@@ -113,6 +113,5 @@ if ! shopt -oq posix; then
 fi
 
 if [ -z "${SSH_TTY}" ]; then
-#	play ~/filesystem/audios/Positive.ogg
-	xinit ~/filesystem/startemu.sh >/dev/null 2>&1
+	xinit ~/filesystem/startemu.sh -- -nocursor >/dev/null 2>&1
 fi
