@@ -2,9 +2,5 @@
 
 #Disable screen saver
 #xset s off
-
-#Run emu
-#python ~/filesystem/emu.py
-#play ~/filesystem/Positive.ogg
-matchbox-window-manager & python ~/filesystem/emu.py
+matchbox-window-manager -use_cursor no -use_titlebar no & python ~/filesystem/emu.py
 #exit 0
