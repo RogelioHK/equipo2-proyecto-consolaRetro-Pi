@@ -22,7 +22,6 @@ class control(Controller):
 	def __init__(self, **kwargs):
 		Controller.__init__(self, **kwargs)
 
-<<<<<<< HEAD
 	def on_options_press(self):
 		actual = 0
 		end = 0
@@ -37,11 +36,6 @@ class control(Controller):
 		print("actual: ", actual)
 		print("edn: ", end)
 		release = False
-=======
-#	def on_options_press(self):
-#		print("x")
-
->>>>>>> d96ec68958b10586f2e69c30ccd261bba2e46a03
 #	def on_R2_press(self, value):
 #		pass
 
