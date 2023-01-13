@@ -73,8 +73,8 @@ lblb.place(x=10, y=540, width=400, height = 50)
 lblc = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
 lblc.place(x=10, y=590, width=400, height = 50)
 
-img = Image.open("/home/equipo2/ROMS/pinguino default.png")
-img = img.resize((100,100), Image.BICUBIC)
+img = Image.open("/home/equipo2/ROMS/pd.png")
+img = img.resize((100,100), Image.ANTIALIAS)
 img0 = ImageTk.PhotoImage(img)
 lbl_img = Label(window, image = img0, bg = "#333333")
 
@@ -121,8 +121,7 @@ class Control(Controller):
 		#	open_close = 0
 		if isPlaying == False:
 		#Else reproduce the sound to detect the emulation start
-			sound0 = threading.Thread(target = sound, args = ["emu"])
-			sound0.start()
+			sound("emu")
 		#Also, get the roms directory and execute a Thread of the emulation
 			defRom = "~/bsnes-plus/bsnes/out/bsnes ~/ROMS/" + "\"" + roms[actual] + "\""
 			actualGame = threading.Thread(target=os.system, args=[defRom])
@@ -141,18 +140,18 @@ class Control(Controller):
 		if isPlaying:
 			pass
 		else:
-			sound0 = threading.Thread(target = sound, args = ["select"])
-			sound0.start()
 			updateActualRom(1)
+			os.popen("aplay ~/filesystem/audios/select.wav")
+			#sound("select")
 
 	def on_down_arrow_press(self):
 		global isPlaying
 		if isPlaying:
 			pass
 		else:
-			sound0 = threading.Thread(target = sound, args = ["select"])
-			sound0.start()
 			updateActualRom(-1)
+			os.popen("aplay ~/filesystem/audios/select.wav")
+			#sound("select")
 
 #Functions to call when the control is connect and disconnect
 def connect():
@@ -179,13 +178,15 @@ def disconnect():
 
 #Function to start the joystick driver
 def startControl():
-	global isControl
+	global isControl, lbl0
 	try:
 		#Connect the js0 input. If use two gamepads, only the first handle the interface
 		c0 = Control(interface = "/dev/input/js0", connecting_using_ds4drv=False)
 		c0.listen(on_connect=connect, on_disconnect=disconnect, timeout = 60) #Wait for the joystick for 60 seconds
 	except:
-		pass
+		lbl0.delete(0, 'end')
+		lbl0.insert(0, "Control Fail")
+		startControl()
 
 #Function to stop the thread of the game or shutdown the system
 def closeSystem():
@@ -231,7 +232,7 @@ def sound(snd):
 #Function to change the Image for the image of the actual game (or use the default image if isn't)
 #and update the list of games at the left side of the GUI when is necessary
 def updateLabels():
-	global roms, actual, img, img0, lbl0, lbl_img
+	global roms, actual, img, img0, lbl0, lbl_img, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7, lbl8, lbl9, lbla, lblb,lblc
 
 	lbl0.delete(0, 'end')
 	lbl0.insert(0, roms[actual].split(".")[0])
@@ -258,14 +259,17 @@ def updateLabels():
 	lblc.delete(0, 'end')
 	lblc.insert(0, roms[-len(roms) + actual + 11].split(".")[0])
 
-	try:
+	imgs = os.popen("ls " + ROMS_DIR).readlines()
+	print(ROMS_DIR + roms[actual].split(".")[0] + ".png\\n")
+	if (roms[actual].split(".")[0] + ".png\n") in imgs:
 		img = Image.open(ROMS_DIR + roms[actual].split(".")[0] + ".png")
-		img = img.resize((795,495), Image.BICUBIC)
+		img = img.resize((795,495), Image.ANTIALIAS)
 		img0 = ImageTk.PhotoImage(img)
 		lbl_img = Label(window, image = img0, bg = "#333333")
 		lbl_img.place(x = 455, y = 90, width = 800, height = 500)
-	except:
-		img = Image.open("/home/equipo2/ROMS/pinguino default.png")
+	else:
+		print("IMGS: ", imgs)
+		img = Image.open("/home/equipo2/ROMS/pd.png")
 		img = img.resize((100,100), Image.BICUBIC)
 		img0 = ImageTk.PhotoImage(img)
 		lbl_img = Label(window, image = img0, bg = "#333333")
@@ -312,7 +316,7 @@ def readRoms():
 		else:
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "No Storage Detected")
-		time.sleep(2)
+		time.sleep(1)
 
 #Function to update the roms global list
 def updateRoms(newRoms):
@@ -332,8 +336,8 @@ def updateRoms(newRoms):
 	else:
 		lbl1.delete(0, 'end')
 		lbl1.insert(0, "No new ROMS")
-	roms.sort() #Sort the roms xd
-	time.sleep(2) #Time to see the messages in the GUI
+	roms.sort() #Sort the roms
+	time.sleep(1) #Time to see the messages in the GUI
 
 #Function to start the GUI
 def startGui():
@@ -344,14 +348,12 @@ def startGui():
 #Main function which starts the threads of services necesaries
 #for the correct functionality of the program
 def main():
-	global roms
-	sound0 = threading.Thread(target = sound, args = ["start"])
+	sound("start")#Play the start sound
 	readActualRoms() #Read the actual roms in the ROMS directory and append into the roms global list
+	strControl = threading.Thread(target=startControl, args=())
+	strControl.start() #Start the gamepad driver for the GUI
 	externalDevice = threading.Thread(target = readRoms, args=())
-	setControl = threading.Thread(target = startControl, args =())
-	setControl.start() #Start the gamepad driver for the GUI
 	externalDevice.start() #Start the thread which read the external storage
-	sound0.start() #Play the start sound
 	startGui() #Start the GUI
 
 if __name__ == '__main__':
