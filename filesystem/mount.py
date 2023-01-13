@@ -22,7 +22,6 @@
 
 import os
 import time
-
 EXTERNAL_STORAGE = "~/external-storage/" #Directory for the USB
 
 #Function to verify if a new storage connected to the Pi
@@ -63,11 +62,14 @@ def getFiles(drive, actualRoms):
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.SFC ~/ROMS/")
 			elif ".png" in rom:
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.png ~/ROMS/")
-		#Check if the external storage is mounted. If it's true, then umount and eject.
-		while(isAvailableDrive()):
-			os.system("sudo umount " + EXTERNAL_STORAGE)
-			os.system("sudo eject " + drive)
-			time.sleep(3)
 	else:
 		newRoms.append("NoROM")
+	#Check if the external storage is mounted. If it's true, then umount and eject.
+	while(isAvailableDrive()):
+		try:
+			print(os.popen("sudo umount " + EXTERNAL_STORAGE).readlines())
+			print(os.popen("sudo eject " + drive).readlines())
+			time.sleep(0.1)
+		except:
+			print("Hola :D")
 	return newRoms
