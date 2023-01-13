@@ -1,0 +1,1 @@
+Carpeta necesaria para los puntos de guardado del usuario
