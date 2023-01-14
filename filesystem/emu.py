@@ -23,16 +23,30 @@
 import os
 import time
 import threading
-import pygame
 from PIL import ImageTk, Image
 import tkinter as tk
 from tkinter import Label, Entry, PhotoImage
 from pyPS4Controller.controller import Controller
 import mount
 
+
+#Global variables
+USER_DIR = "/home/" + os.popen("whoami").readlines()[0].split("\n")[0] + "/" #dinamic user
+ROMS_DIR =  USER_DIR + "ROMS/" #dinamic user added to the ROMS dir
+roms = [] #List of the roms in the system
+actual = 0 #Variable which contains the actual position in the roms list
+timeStart = 0 #Take the time when the ps button is pressed
+timeEnd = 0 #Take the time when the ps button is unpressed
+psRelease = False #Boolean variable which change to True when the ps button is unpressed
+actualGame = threading.Thread() #Thread of the actual game in emu
+isPlaying = False #Bool which change when the emu is on or off
+isControl = False #Bool which change when the controll is connect of disconnect
+untilPressed = False #Bool which change when the isUntilPressedFunction is Called
+active = True # block the ps button until the game start
+
+#Tkinter (GUI) objects
 window = tk.Tk()	#Comment when using SSH
 window['background']='#262626'
-
 #labels and Image control. The parameter change the color, font, backgrouds color and position of the text
 lbl0 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
 lbl0.place(x=10, y=10, width=1250, height = 50)
@@ -73,27 +87,23 @@ lblb.place(x=10, y=540, width=400, height = 50)
 lblc = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
 lblc.place(x=10, y=590, width=400, height = 50)
 
-img = Image.open("/home/equipo2/ROMS/pd.png")
+img = Image.open(USER_DIR + "filesystem/img/pd.png")
 img = img.resize((100,100), Image.ANTIALIAS)
 img0 = ImageTk.PhotoImage(img)
 lbl_img = Label(window, image = img0, bg = "#333333")
 
-img1 = Image.open("/home/equipo2/filesystem/pinguinostart.png")
+img1 = Image.open(USER_DIR + "filesystem/img/pinguinostart.png")
 img1 = img1.resize((100,100), Image.BICUBIC)
 img2 = ImageTk.PhotoImage(img1)
 lbl_img1 = Label(window, image = img2, bg = "#262626")
 
-#Global variables
-ROMS_DIR = "/home/equipo2/ROMS/"
-roms = [] #List of the roms in the system
-actual = 0 #Variable which contains the actual position in the roms list
-open_close = 0 #Variable which count the times that the ps button is pressed
-timeStart = 0 #Take the time when the ps button is pressed
-timeEnd = 0 #Take the time when the ps button is unpressed
-psRelease = False #Boolean variable which change to True when the ps button is unpressed
-actualGame = threading.Thread() #Thread of the actual game in emu
-isPlaying = False #Bool which change when the emu is on or off
-isControl = False #Boo which change when the controll is connect of disconnect
+def lock():
+	global active
+	ts = time.time()
+	te = 0
+	while (te-ts) <= 5:
+		te = time.time()
+	active = True
 
 #Class necesary for the map of the ps4 joystick (this recognize all gamepads, but use the ps4 joystick mapped)
 class Control(Controller):
@@ -102,38 +112,39 @@ class Control(Controller):
 
 	#Functions which defines the buttons action
 	def on_playstation_button_press(self):
-		global timeStart, timeEnd, open_close, psRelease
-		#open_close += 1
-		timeStart = 0
-		timeEnd = 0
-		psRelease = False
-		#Start the thread to determines how time is pressed this button. If pass the 1.5s, then close the game or shutdown the system
-		pressed = threading.Thread(target = isUntilPressed, args = ())
-		pressed.start()
+		global timeStart, timeEnd, psRelease, untilPressed, active
+
+		if(active):
+			timeStart = 0
+			timeEnd = 0
+			psRelease = False
+			#Start the thread to determines how time is pressed this button. If pass the 1.5s, then close the game or shutdown the system
+			untilPressed = False
+			pressed = threading.Thread(target = isUntilPressed, args = ())
+			pressed.start()
+		else:
+			os.popen("aplay ~/filesystem/audios/lock.wav")
 
 	def on_playstation_button_release(self):
-		global roms, actual, open_close, actualGame, psRelease, img1, img2, lbl_img1, isPlaying
-		psRelease = True
-
-		#When detect the button pressed twice, this means the game has closed. Hide the image to return the GUI
-		#if open_close == 1:
-		#	lbl_img1.place_forget()
-		#	open_close = 0
-		if isPlaying == False:
-		#Else reproduce the sound to detect the emulation start
-			sound("emu")
-		#Also, get the roms directory and execute a Thread of the emulation
-			defRom = "~/bsnes-plus/bsnes/out/bsnes ~/ROMS/" + "\"" + roms[actual] + "\""
-			actualGame = threading.Thread(target=os.system, args=[defRom])
-			actualGame.start()
-			isPlaying = True
-		#Put the image in front of the GUI while the game start
-			img1 = Image.open("/home/equipo2/filesystem/pinguinostart.png")
-			img1 = img1.resize((300,300), Image.BICUBIC)
-			img2 = ImageTk.PhotoImage(img1)
-			lbl_img1 = Label(window, image = img2, bg = "#262626")
-			lbl_img1.place(x = 0, y = -200, width = 1280, height = 1024)
-
+		global roms, actual, actualGame, psRelease, img1, img2, lbl_img1, isPlaying, untilPressd, active
+		if active:
+			psRelease = True
+			#Ask if the emu is active
+			if isPlaying == False and untilPressed == False:
+				#Get the roms directory and execute a Thread of the emulation
+				defRom = "~/bsnes-plus/bsnes/out/bsnes ~/ROMS/" + "\"" + roms[actual] + "\""
+				actualGame = threading.Thread(target=os.system, args=[defRom])
+				actualGame.start()
+				isPlaying = True
+				#Put the image in front of the GUI while the game start
+				img1 = Image.open(USER_DIR + "filesystem/img/pinguinostart.png")
+				img1 = img1.resize((300,300), Image.BICUBIC)
+				img2 = ImageTk.PhotoImage(img1)
+				lbl_img1 = Label(window, image = img2, bg = "#262626")
+				lbl_img1.place(x = 0, y = -200, width = 1280, height = 1024)
+				active = False
+				stayGame = threading.Thread(target=lock, args=())
+				stayGame.start()
 #When the game is running, is unable. Otherwise, interact with the games list.
 	def on_up_arrow_press(self):
 		global isPlaying
@@ -142,7 +153,6 @@ class Control(Controller):
 		else:
 			updateActualRom(1)
 			os.popen("aplay ~/filesystem/audios/select.wav")
-			#sound("select")
 
 	def on_down_arrow_press(self):
 		global isPlaying
@@ -151,7 +161,14 @@ class Control(Controller):
 		else:
 			updateActualRom(-1)
 			os.popen("aplay ~/filesystem/audios/select.wav")
-			#sound("select")
+
+	#Add a button to restart the system if any game is playing
+	def on_share_press(self):
+		global isPlaying
+		if isPlaying:
+			pass
+		else:
+			os.system("sudo reboot now")
 
 #Functions to call when the control is connect and disconnect
 def connect():
@@ -190,44 +207,40 @@ def startControl():
 
 #Function to stop the thread of the game or shutdown the system
 def closeSystem():
-	global window, isPlaying, open_close, lbl_img1
+	global window, isPlaying, lbl_img1, active
 	if isPlaying == True: #Means the emu is running. Then, they stopped
-		sound("start")
-		time.sleep(1.5)
+		os.popen("aplay ~/filesystem/audios/open.wav")
 		os.system("sudo pkill bsnes") #Kill the thread of the emu "bsnes"
 		isPlaying = False
-		open_close = 1
 		lbl_img1.place_forget()
 	else:
-		sound("start")
+		os.popen("aplay " + USER_DIR + "filesystem/audios/shutdown.wav")
+		active = False
+		time.sleep(2)
 		os.system("sudo shutdown -h now")
 
 #Function wich detect if the ps button is pressed until 1.5 second. The, use the closeSystem function
 def isUntilPressed():
-	global timeStart, timeEnd, psRelease
+	global timeStart, timeEnd, psRelease, untilPressed
 	timeStart = time.time()
 	while psRelease == False:
 		timeEnd = time.time()
 		if((timeEnd - timeStart) >= 1.5):
 			closeSystem()
+			untilPressed = True
 			return
 
-#Function to load the sound pack of the system
-def sound(snd):
-	pygame.mixer.init()
-	if(snd == "start"):
-		pygame.mixer.music.load("/home/equipo2/filesystem/audios/Soft-delay.mp3")
-	elif (snd == "select"):
-		pygame.mixer.music.load("/home/equipo2/filesystem/audios/select.mp3")
-	elif (snd == "emu"):
-		pygame.mixer.music.load("/home/equipo2/filesystem/audios/Slick.mp3")
-	elif (snd == "storage"):
-		pygame.mixer.music.load("/home/equipo2/filesystem/audios/Positive.mp3")
-	elif (snd == "storage-out"):
-		pygame.mixer.music.load("/home/equipo2/filesystem/audios/Rhodes.mp3")
-	pygame.mixer.music.play()
-	while pygame.mixer.music.get_busy() == True:
-    		continue
+#Function which update the next arg on the global roms list.
+# If the arg on the list is > lenght list, return to 0.
+# If the arg on the list is < 0, then return to the last arg of the list
+def updateActualRom(num):
+	global actual, roms
+	actual += num
+	if (actual >= len(roms)):
+		actual = 0
+	elif (actual < 0):
+		actual = len(roms) - 1
+	updateLabels()
 
 #Function to change the Image for the image of the actual game (or use the default image if isn't)
 #and update the list of games at the left side of the GUI when is necessary
@@ -260,7 +273,7 @@ def updateLabels():
 	lblc.insert(0, roms[-len(roms) + actual + 11].split(".")[0])
 
 	imgs = os.popen("ls " + ROMS_DIR).readlines()
-	print(ROMS_DIR + roms[actual].split(".")[0] + ".png\\n")
+
 	if (roms[actual].split(".")[0] + ".png\n") in imgs:
 		img = Image.open(ROMS_DIR + roms[actual].split(".")[0] + ".png")
 		img = img.resize((795,495), Image.ANTIALIAS)
@@ -269,25 +282,11 @@ def updateLabels():
 		lbl_img.place(x = 455, y = 90, width = 800, height = 500)
 	else:
 		print("IMGS: ", imgs)
-		img = Image.open("/home/equipo2/ROMS/pd.png")
+		img = Image.open(USER_DIR + "filesystem/img/pd.png")
 		img = img.resize((100,100), Image.BICUBIC)
 		img0 = ImageTk.PhotoImage(img)
 		lbl_img = Label(window, image = img0, bg = "#333333")
 		lbl_img.place(x = 455, y = 90, width = 800, height = 500)
-
-#Function which update the next arg on the global roms list.
-# If the arg on the list is > lenght list, return to 0.
-# If the arg on the list is < 0, then return to the last arg of the list
-def updateActualRom(num):
-	global actual
-	global roms
-
-	actual += num
-	if (actual >= len(roms)):
-		actual = 0
-	elif (actual < 0):
-		actual = len(roms) - 1
-	updateLabels()
 
 #Funtion to read the local ROMS directory and initialize de roms global list
 def readActualRoms():
@@ -306,13 +305,13 @@ def readRoms():
 	while True:
 		data =  mount.isAvailableDrive()
 		if data:
-			sound("storage")
+			os.popen("aplay ~/filesystem/audios/plugged.wav")
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "Storage Detected. Reading...")
 			updateRoms(mount.getFiles(data, roms))
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "Disconnect the Drive")
-			sound("storage-out")
+			os.popen("aplay ~/filesystem/audios/unplugged.wav")
 		else:
 			lbl1.delete(0, 'end')
 			lbl1.insert(0, "No Storage Detected")
@@ -348,7 +347,8 @@ def startGui():
 #Main function which starts the threads of services necesaries
 #for the correct functionality of the program
 def main():
-	sound("start")#Play the start sound
+	os.popen("aplay ~/filesystem/audios/boot.wav")
+	#sound("start") #Play the start sound
 	readActualRoms() #Read the actual roms in the ROMS directory and append into the roms global list
 	strControl = threading.Thread(target=startControl, args=())
 	strControl.start() #Start the gamepad driver for the GUI
