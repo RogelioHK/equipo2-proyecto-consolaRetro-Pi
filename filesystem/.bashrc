@@ -113,5 +113,5 @@ if ! shopt -oq posix; then
 fi
 
 if [ -z "${SSH_TTY}" ]; then
-	xinit ~/filesystem/startemu.sh -- -nocursor >/dev/null 2>&1
+        xinit ~/filesystem/startemu.sh -- -nocursor >/dev/null 2>&1
 fi
