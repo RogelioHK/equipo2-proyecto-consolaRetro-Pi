@@ -1,0 +1,1 @@
+La resolución de las imágenes se recomienda en 250x180p para no realentizar el sistema.

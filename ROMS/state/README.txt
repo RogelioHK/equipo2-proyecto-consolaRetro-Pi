@@ -1,1 +1,1 @@
-Carpeta necesaria para los puntos de guardado del usuario
+Directorio necesario para guardar los states del usuario

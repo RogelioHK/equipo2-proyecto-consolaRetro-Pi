@@ -1,1 +1,1 @@
-Carpeta necesaria para los puntos de guardado del juego
+Carpeta necesaria para guardar el progreso de los juegos
