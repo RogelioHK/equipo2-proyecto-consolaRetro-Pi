@@ -22,11 +22,11 @@
 
 import os
 import time
-EXTERNAL_STORAGE = "~/external-storage/" #Directory for the USB
+EXTERNAL_STORAGE = "~/external-storage/" #Directory for the external storage
 
 #Function to verify if a new storage connected to the Pi
 def isAvailableDrive():
-	#Read the storages connected to the RB
+	#Read the storages connected to the RBPi
 	storages = os.popen("sudo blkid").readlines()
 	#If the available storages more than 2, exist an external drive to read
 	if(len(storages) > 2):
@@ -45,31 +45,41 @@ def getFiles(drive, actualRoms):
 	#Search for a "ROMS" directory. If doesn't exist, the script ends. If exist, copy the ROMs files
 	if "ROMS\n" in storage:
 		data = os.popen("ls " + EXTERNAL_STORAGE + "ROMS/").readlines()
+		#covers = os.popen("ls ~/ROMS/").readlines()
 		#Copy all the file which the extension is .SMC, .smc, .sfc, .SFC and .png. The ROMS files and the snes cover
 		for rom in data:
 			rom = rom.split("\n")[0]
+			print("roms ", rom)
+			print("actualRoms ", actualRoms)
 			if ".SMC" in rom and rom not in actualRoms:
 				newRoms.append(rom)
-				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.SMC ~/ROMS/")
+				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom + "\" ~/ROMS/")
 			elif ".smc" in rom and rom not in actualRoms:
 				newRoms.append(rom)
-				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.smc ~/ROMS/")
+				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom + "\" ~/ROMS/")
 			elif ".sfc" in rom and rom not in actualRoms:
 				newRoms.append(rom)
-				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.sfc ~/ROMS/")
+				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom + "\" ~/ROMS/")
 			elif ".SFC" in rom and rom not in actualRoms:
 				newRoms.append(rom)
-				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.SFC ~/ROMS/")
-			elif ".png" in rom:
-				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/*.png ~/ROMS/")
+				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom + "\" ~/ROMS/")
+			if ((rom.split(".")[0] + ".png\n") in data) and (rom in newRoms): #Copy the cover if exist
+				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom.split(".")[0] + ".png\" ~/ROMS/")
+		#Check if the covers of the roms in the system exist in the external storage and copy it
+		for cover in actualRoms:
+			print(cover)
+			cover = cover.split(".")[0] + ".png"
+			print(cover)
+			if cover + "\n" in data:
+				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + cover + "\" ~/ROMS/")
 	else:
 		newRoms.append("NoROM")
-	#Check if the external storage is mounted. If it's true, then umount and eject.
+	#Check if the external storage is mounted. If it's true, then umount and eject it.
 	while(isAvailableDrive()):
 		try:
 			print(os.popen("sudo umount " + EXTERNAL_STORAGE).readlines())
 			print(os.popen("sudo eject " + drive).readlines())
 			time.sleep(0.1)
 		except:
-			print("Hola :D")
+			pass
 	return newRoms
