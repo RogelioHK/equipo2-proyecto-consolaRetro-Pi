@@ -25,7 +25,7 @@ import time
 import threading
 from PIL import ImageTk, Image
 import tkinter as tk
-from tkinter import Label, Entry, PhotoImage
+from tkinter import Label, Entry, Frame
 from pyPS4Controller.controller import Controller
 import mount
 
@@ -43,57 +43,66 @@ isPlaying = False #Bool which change when the emu is on or off
 isControl = False #Bool which change when the controll is connect of disconnect
 untilPressed = False #Bool which change when the isUntilPressedFunction is Called
 active = True # block the ps button until the game start
+setAudio = True #Select the audio output on the system
 
 #Tkinter (GUI) objects
 window = tk.Tk()	#Comment when using SSH
 window['background']='#262626'
-#labels and Image control. The parameter change the color, font, backgrouds color and position of the text
-lbl0 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl0.place(x=10, y=10, width=1250, height = 50)
+window.update()
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+frm = Frame(window, width = screen_width, height = screen_height)
+frm.config(bg = "#262626")
+frm.pack(fill="both", expand="True")
 
-lbl1 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl1.place(x=855, y=620, width=400, height = 50)
+#Label to the actual game
+lbl0 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl0.place(relx=0.01, rely=0.01, relwidth=0.98, relheight = 0.065)
 
-lbl2 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl2.place(x=10, y=90, width=400, height = 50)
+lbl1 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER) #Label to the external storage info
+lbl1.place(relx=0.63, rely=0.847, relwidth=0.35, relheight = 0.065)
 
-lbl3 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl3.place(x=10, y=140, width=400, height = 50)
+#Labels to the games list
+lbl2 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl2.place(relx=0.01, rely=0.132, relwidth=0.35, relheight = 0.065)
+lbl3 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl3.place(relx=0.01, rely=0.197, relwidth=0.35, relheight = 0.065)
+lbl4 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl4.place(relx=0.01, rely=0.262, relwidth=0.35, relheight = 0.065)
+lbl5 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl5.place(relx=0.01, rely=0.327, relwidth=0.35, relheight = 0.065)
+lbl6 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl6.place(relx=0.01, rely=0.392, relwidth=0.35, relheight = 0.065)
+lbl7 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl7.place(relx=0.01, rely=0.457, relwidth=0.35, relheight = 0.065)
+lbl8 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl8.place(relx=0.01, rely=0.522, relwidth=0.35, relheight = 0.065)
+lbl9 = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbl9.place(relx=0.01, rely=0.587, relwidth=0.35, relheight = 0.065)
+lbla = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbla.place(relx=0.01, rely=0.652, relwidth=0.35, relheight = 0.065)
+lblb = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lblb.place(relx=0.01, rely=0.717, relwidth=0.35, relheight = 0.065)
+lblc = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lblc.place(relx=0.01, rely=0.782, relwidth=0.35, relheight = 0.065)
+lbld = Entry(frm, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
+lbld.place(relx=0.01, rely=0.847, relwidth=0.35, relheight = 0.065)
 
-lbl4 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl4.place(x=10, y=190, width=400, height = 50)
+#Image to the sound card in use
+img_sound = Image.open(USER_DIR+"filesystem/img/HEADPHONE-ICON.png")
+img_sound = img_sound.resize((int(screen_width*0.4), int(screen_height*0.4)), Image.ANTIALIAS)
+img_soundTk = ImageTk.PhotoImage(img_sound)
+lbl_imgSound = Label(frm, image = img_soundTk, bg = "#262626")
 
-lbl5 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl5.place(x=10, y=240, width=400, height = 50)
-
-lbl6 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl6.place(x=10, y=290, width=400, height = 50)
-
-lbl7 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl7.place(x=10, y=340, width=400, height = 50)
-
-lbl8 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl8.place(x=10, y=390, width=400, height = 50)
-
-lbl9 = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbl9.place(x=10, y=440, width=400, height = 50)
-
-lbla = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lbla.place(x=10, y=490, width=400, height = 50)
-
-lblb = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lblb.place(x=10, y=540, width=400, height = 50)
-
-lblc = Entry(window, bg="#333333", font = "Console 16", fg = "white", justify=tk.CENTER)
-lblc.place(x=10, y=590, width=400, height = 50)
-
+#Image for the default game image
 img = Image.open(USER_DIR + "filesystem/img/pd.png")
-img = img.resize((100,100), Image.ANTIALIAS)
+img = img.resize((int(screen_width*0.4), int(screen_height*0.4)), Image.ANTIALIAS)
 img0 = ImageTk.PhotoImage(img)
 lbl_img = Label(window, image = img0, bg = "#333333")
 
+#Image until the emu start
 img1 = Image.open(USER_DIR + "filesystem/img/pinguinostart.png")
-img1 = img1.resize((100,100), Image.BICUBIC)
+img1 = img1.resize((int(screen_width), int(screen_height)), Image.BICUBIC)
 img2 = ImageTk.PhotoImage(img1)
 lbl_img1 = Label(window, image = img2, bg = "#262626")
 
@@ -138,13 +147,14 @@ class Control(Controller):
 				isPlaying = True
 				#Put the image in front of the GUI while the game start
 				img1 = Image.open(USER_DIR + "filesystem/img/pinguinostart.png")
-				img1 = img1.resize((300,300), Image.BICUBIC)
+				img1 = img1.resize((int(screen_width*0.5), int(screen_height*0.5)), Image.BICUBIC)
 				img2 = ImageTk.PhotoImage(img1)
 				lbl_img1 = Label(window, image = img2, bg = "#262626")
-				lbl_img1.place(x = 0, y = -200, width = 1280, height = 1024)
+				lbl_img1.place(relx=0, rely=0, relwidth=1, relheight=1)
 				active = False
 				stayGame = threading.Thread(target=lock, args=())
 				stayGame.start()
+
 #When the game is running, is unable. Otherwise, interact with the games list.
 	def on_up_arrow_press(self):
 		global isPlaying
@@ -169,6 +179,34 @@ class Control(Controller):
 			pass
 		else:
 			os.system("sudo reboot now")
+
+	#Use the options button to change the audio output
+	def on_options_press(self):
+		global isPlaying, setAudio
+		if isPlaying:
+			pass
+		else:
+			setAudio = not(setAudio)
+			audioOutput()
+			os.system("aplay " + USER_DIR + "filesystem/audios/open.wav")
+
+#Functio which change the audio output
+def audioOutput():
+	global setAudio, img_sound, img_soundTk, lbl_imgSound, screen_width, screen_height
+	if setAudio:
+		os.system("pacmd set-default-sink alsa_output.platform-bcm2835_audio.analog-stereo")
+		img_sound = Image.open(USER_DIR+"filesystem/img/HEADPHONE-ICON.png")
+		img_sound = img_sound.resize((int(screen_width*0.05), int(screen_height*0.05)), Image.ANTIALIAS)
+		img_soundTk = ImageTk.PhotoImage(img_sound)
+		lbl_imgSound = Label(frm, image = img_soundTk, bg = "#262626")
+		lbl_imgSound.place(relx=0.4675, rely=0.847, relwidth=0.065, relheight=0.1)
+	else:
+		os.system("pacmd set-default-sink alsa_output.platform-fef00700.hdmi.hdmi-stereo")
+		img_sound = Image.open(USER_DIR+"filesystem/img/TV-ICON.png")
+		img_sound = img_sound.resize((int(screen_width*0.05), int(screen_height*0.05)), Image.ANTIALIAS)
+		img_soundTk = ImageTk.PhotoImage(img_sound)
+		lbl_imgSound = Label(frm, image = img_soundTk, bg = "#262626")
+		lbl_imgSound.place(relx=0.4675, rely=0.847, relwidth=0.065, relheight=0.1)
 
 #Functions to call when the control is connect and disconnect
 def connect():
@@ -245,7 +283,8 @@ def updateActualRom(num):
 #Function to change the Image for the image of the actual game (or use the default image if isn't)
 #and update the list of games at the left side of the GUI when is necessary
 def updateLabels():
-	global roms, actual, img, img0, lbl0, lbl_img, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7, lbl8, lbl9, lbla, lblb,lblc
+	global roms, actual, img, img0, lbl0, lbl_img, lbl2, lbl3, lbl4, lbl5, lbl6, lbl7, lbl8, lbl9, lbla, lblb,lblc, lbld
+	global screen_width, screen_height
 
 	lbl0.delete(0, 'end')
 	lbl0.insert(0, roms[actual].split(".")[0])
@@ -271,22 +310,23 @@ def updateLabels():
 	lblb.insert(0, roms[-len(roms) + actual + 10].split(".")[0])
 	lblc.delete(0, 'end')
 	lblc.insert(0, roms[-len(roms) + actual + 11].split(".")[0])
+	lbld.delete(0, 'end')
+	lbld.insert(0, roms[-len(roms) + actual + 12].split(".")[0])
 
 	imgs = os.popen("ls " + ROMS_DIR).readlines()
 
 	if (roms[actual].split(".")[0] + ".png\n") in imgs:
 		img = Image.open(ROMS_DIR + roms[actual].split(".")[0] + ".png")
-		img = img.resize((795,495), Image.ANTIALIAS)
+		img = img.resize((int(screen_width*0.57), int(screen_height*0.64)), Image.BICUBIC)
 		img0 = ImageTk.PhotoImage(img)
 		lbl_img = Label(window, image = img0, bg = "#333333")
-		lbl_img.place(x = 455, y = 90, width = 800, height = 500)
+		lbl_img.place(relx = 0.4, rely = 0.132, relwidth = 0.58, relheight = 0.65)
 	else:
-		print("IMGS: ", imgs)
 		img = Image.open(USER_DIR + "filesystem/img/pd.png")
-		img = img.resize((100,100), Image.BICUBIC)
+		img = img.resize((int(screen_width*0.4), int(screen_height*0.4)), Image.BICUBIC)
 		img0 = ImageTk.PhotoImage(img)
 		lbl_img = Label(window, image = img0, bg = "#333333")
-		lbl_img.place(x = 455, y = 90, width = 800, height = 500)
+		lbl_img.place(relx = 0.4, rely = 0.132, relwidth = 0.58, relheight = 0.65)
 
 #Funtion to read the local ROMS directory and initialize de roms global list
 def readActualRoms():
@@ -300,7 +340,7 @@ def readActualRoms():
 
 #Function to read the external ROMS directory. For more information, read mount.py
 def readRoms():
-	global roms, lbl1
+	global roms, lbl1, screen_width, screen_height
 	data = 0
 	while True:
 		data =  mount.isAvailableDrive()
@@ -341,19 +381,19 @@ def updateRoms(newRoms):
 #Function to start the GUI
 def startGui():
 	global window
-	window.geometry("1280x1024")
+	window.geometry("1280x720")
 	window.mainloop()
 
 #Main function which starts the threads of services necesaries
 #for the correct functionality of the program
 def main():
-	os.popen("aplay ~/filesystem/audios/boot.wav")
-	#sound("start") #Play the start sound
+	os.system("aplay ~/filesystem/audios/boot.wav") #Play the start sound
 	readActualRoms() #Read the actual roms in the ROMS directory and append into the roms global list
 	strControl = threading.Thread(target=startControl, args=())
 	strControl.start() #Start the gamepad driver for the GUI
 	externalDevice = threading.Thread(target = readRoms, args=())
 	externalDevice.start() #Start the thread which read the external storage
+	audioOutput()
 	startGui() #Start the GUI
 
 if __name__ == '__main__':
