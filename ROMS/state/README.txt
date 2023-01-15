@@ -1,1 +1,1 @@
-Directorio necesario para guardar los states del usuario
+Directorio necesario para los estados guardados por el ususario. NO BORRAR
