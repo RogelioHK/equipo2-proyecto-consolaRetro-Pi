@@ -72,8 +72,8 @@ def getFiles(drive, actualRoms):
 	#Check if the external storage is mounted. If it's true, then umount and eject it.
 	while(isAvailableDrive()):
 		try:
-			os.popen("sudo umount " + EXTERNAL_STORAGE).readlines()
-			os.popen("sudo eject " + drive).readlines()
+			os.popen("sudo umount " + EXTERNAL_STORAGE)
+			os.popen("sudo eject " + drive)
 		except:
 			time.sleep(0.1)
 	return newRoms
