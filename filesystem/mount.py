@@ -45,12 +45,9 @@ def getFiles(drive, actualRoms):
 	#Search for a "ROMS" directory. If doesn't exist, the script ends. If exist, copy the ROMs files
 	if "ROMS\n" in storage:
 		data = os.popen("ls " + EXTERNAL_STORAGE + "ROMS/").readlines()
-		#covers = os.popen("ls ~/ROMS/").readlines()
 		#Copy all the file which the extension is .SMC, .smc, .sfc, .SFC and .png. The ROMS files and the snes cover
 		for rom in data:
 			rom = rom.split("\n")[0]
-			print("roms ", rom)
-			print("actualRoms ", actualRoms)
 			if ".SMC" in rom and rom not in actualRoms:
 				newRoms.append(rom)
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom + "\" ~/ROMS/")
@@ -67,9 +64,7 @@ def getFiles(drive, actualRoms):
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + rom.split(".")[0] + ".png\" ~/ROMS/")
 		#Check if the covers of the roms in the system exist in the external storage and copy it
 		for cover in actualRoms:
-			print(cover)
 			cover = cover.split(".")[0] + ".png"
-			print(cover)
 			if cover + "\n" in data:
 				os.system("sudo cp " + EXTERNAL_STORAGE + "ROMS/\"" + cover + "\" ~/ROMS/")
 	else:
@@ -77,9 +72,8 @@ def getFiles(drive, actualRoms):
 	#Check if the external storage is mounted. If it's true, then umount and eject it.
 	while(isAvailableDrive()):
 		try:
-			print(os.popen("sudo umount " + EXTERNAL_STORAGE).readlines())
-			print(os.popen("sudo eject " + drive).readlines())
-			time.sleep(0.1)
+			os.popen("sudo umount " + EXTERNAL_STORAGE).readlines()
+			os.popen("sudo eject " + drive).readlines()
 		except:
-			pass
+			time.sleep(0.1)
 	return newRoms
