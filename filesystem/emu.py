@@ -387,13 +387,13 @@ def startGui():
 #Main function which starts the threads of services necesaries
 #for the correct functionality of the program
 def main():
+	audioOutput()
 	os.system("aplay ~/filesystem/audios/boot.wav") #Play the start sound
 	readActualRoms() #Read the actual roms in the ROMS directory and append into the roms global list
 	strControl = threading.Thread(target=startControl, args=())
 	strControl.start() #Start the gamepad driver for the GUI
 	externalDevice = threading.Thread(target = readRoms, args=())
 	externalDevice.start() #Start the thread which read the external storage
-	audioOutput()
 	startGui() #Start the GUI
 
 if __name__ == '__main__':
